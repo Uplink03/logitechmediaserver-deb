@@ -1,0 +1,12 @@
+[submodule "slimserver"]
+	path = source/server
+	url = https://github.com/Logitech/slimserver.git
+	branch = public/7.8
+[submodule "slimserver-vendor"]
+	path = source/vendor
+	url = https://github.com/Logitech/slimserver-vendor.git
+	branch = public/7.8
+[submodule "slimserver-platforms"]
+	path = source/platforms
+	url = https://github.com/Logitech/slimserver-platforms.git
+	branch = public/7.8
