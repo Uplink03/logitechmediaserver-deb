@@ -1,0 +1,8 @@
+revision.txt
+debian/tmp
+debian/files
+debian/*.substvars
+*.debhelper.log
+*.debhelper
+.pc
+CPAN/*/Makefile.old

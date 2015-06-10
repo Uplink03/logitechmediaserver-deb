@@ -1,0 +1,358 @@
+Index: build/source/vendor/CPAN/buildme.sh
+===================================================================
+--- build.orig/source/vendor/CPAN/buildme.sh	2015-06-09 12:36:33.084547000 +0100
++++ build/source/vendor/CPAN/buildme.sh	2015-06-09 15:54:53.756547000 +0100
+@@ -308,13 +308,14 @@
+         else
+             make
+         fi
+-        if [ $? != 0 ]; then
++        Err=$?
++        if [ $Err != 0 ]; then
+             if [ $RUN_TESTS -eq 1 ]; then
+                 echo "make test failed, aborting"
+             else
+                 echo "make failed, aborting"
+             fi
+-            exit $?
++            exit $Err
+         fi
+         make install
+         make clean
+@@ -354,6 +355,7 @@
+ }
+ 
+ function build {
++    [[ -f "$1".stamp ]] && return
+     case "$1" in
+         Class::C3::XS)
+             if [ $PERL_58 ]; then
+@@ -369,13 +371,14 @@
+                 else
+                     make
+                 fi
+-                if [ $? != 0 ]; then
++                Err=$?
++                if [ $Err != 0 ]; then
+                     if [ $RUN_TESTS -eq 1 ]; then
+                         echo "make test failed, aborting"
+                     else
+                         echo "make failed, aborting"
+                     fi
+-                    exit $?
++                    exit $Err
+                 fi
+                 make install
+                 make clean
+@@ -433,9 +436,10 @@
+                 CFLAGS="$ICUFLAGS" CXXFLAGS="$ICUFLAGS" LDFLAGS="$FLAGS $OSX_ARCH $OSX_FLAGS" \
+                     ./runConfigureICU $ICUOS --prefix=$BUILD --enable-static --with-data-packaging=archive
+                 $MAKE
+-                if [ $? != 0 ]; then
++                Err=$?
++                if [ $Err != 0 ]; then
+                     echo "make failed"
+-                    exit $?
++                    exit $Err
+                 fi
+                 $MAKE install
+             
+@@ -482,9 +486,10 @@
+                 fi
+ 
+                 $MAKE test
+-                if [ $? != 0 ]; then
++                Err=$?
++                if [ $Err != 0 ]; then
+                     echo "make test failed, aborting"
+-                    exit $?
++                    exit $Err
+                 fi
+                 $MAKE install
+                 $MAKE clean
+@@ -557,11 +562,12 @@
+             cp -Rv ../hints .
+             cd ..
+             
++            RUN_TESTS=0
+             build_module Image-Scale-0.08 "--with-jpeg-includes="$BUILD/include" --with-jpeg-static \
+                     --with-png-includes="$BUILD/include" --with-png-static \
+                     --with-gif-includes="$BUILD/include" --with-gif-static \
+                     INSTALL_BASE=$PERL_BASE"
+-            
++            RUN_TESTS=1
+             ;;
+         
+         IO::AIO)
+@@ -663,9 +669,10 @@
+                 --enable-thread-safe-client \
+                 --without-server --disable-shared --without-docs --without-man
+             make
+-            if [ $? != 0 ]; then
++            Err=$?
++            if [ $Err != 0 ]; then
+                 echo "make failed"
+-                exit $?
++                exit $Err
+             fi
+             make install
+             cd ..
+@@ -692,9 +699,10 @@
+                 ./configure --prefix=$BUILD \
+                 --disable-dependency-tracking
+             make
+-            if [ $? != 0 ]; then
++            Err=$?
++            if [ $Err != 0 ]; then
+                 echo "make failed"
+-                exit $?
++                exit $Err
+             fi
+             make install
+             cd ..
+@@ -737,9 +745,10 @@
+             LDFLAGS="$FLAGS $OSX_ARCH $OSX_FLAGS" \
+                 ./configure --prefix=$BUILD
+             $MAKE # needed for FreeBSD to use gmake 
+-            if [ $? != 0 ]; then
++            Err=$?
++            if [ $Err != 0 ]; then
+                 echo "make failed"
+-                exit $?
++                exit $Err
+             fi
+             $MAKE install
+             cd ..
+@@ -789,9 +798,10 @@
+             OBJCFLAGS="-L$BUILD/lib $FLAGS $OSX_ARCH $OSX_FLAGS -O3" \
+                 ./configure --prefix=$BUILD --disable-shared --disable-dependency-tracking
+             make
+-            if [ $? != 0 ]; then
++            Err=$?
++            if [ $Err != 0 ]; then
+                 echo "make failed"
+-                exit $?
++                exit $Err
+             fi            
+             make install
+             cd ..
+@@ -812,15 +822,17 @@
+             if [ $PERL_BIN ]; then
+                 $PERL_BIN Makefile.PL $MSOPTS INSTALL_BASE=$PERL_BASE
+                 make
+-                if [ $? != 0 ]; then
++                Err=$?
++                if [ $Err != 0 ]; then
+                     echo "make failed, aborting"
+-                    exit $?
++                    exit $Err
+                 fi
+                 # XXX hack until regular test works
+                 $PERL_BIN -Iblib/lib -Iblib/arch t/01use.t
+-                if [ $? != 0 ]; then
++                Err=$?
++                if [ $Err != 0 ]; then
+                     echo "make test failed, aborting"
+-                    exit $?
++                    exit $Err
+                 fi
+                 make install
+                 make clean
+@@ -830,6 +842,12 @@
+             rm -rf libmediascan-0.1
+             ;;
+     esac
++    Err=$?
++    if [ $Err == 0 ]; then
++        touch "$1".stamp;
++    else
++        exit $Err
++    fi
+ }
+ 
+ function build_libexif {
+@@ -846,9 +864,10 @@
+         ./configure --prefix=$BUILD \
+         --disable-dependency-tracking
+     $MAKE
+-    if [ $? != 0 ]; then
++    Err=$?
++    if [ $Err != 0 ]; then
+         echo "make failed"
+-        exit $?
++        exit $Err
+     fi
+     $MAKE install
+     cd ..
+@@ -878,9 +897,10 @@
+             ./configure --prefix=$BUILD --host x86_64-apple-darwin NASM=/usr/local/bin/nasm \
+             --disable-dependency-tracking
+         make
+-        if [ $? != 0 ]; then
++        Err=$?
++        if [ $Err != 0 ]; then
+             echo "make failed"
+-            exit $?
++            exit $Err
+         fi
+         cp -fv .libs/libjpeg.a libjpeg-x86_64.a
+         
+@@ -892,9 +912,10 @@
+             ./configure --prefix=$BUILD NASM=/usr/local/bin/nasm \
+             --disable-dependency-tracking
+         make
+-        if [ $? != 0 ]; then
++        Err=$?
++        if [ $Err != 0 ]; then
+             echo "make failed"
+-            exit $?
++            exit $Err
+         fi
+         cp -fv .libs/libjpeg.a libjpeg-i386.a
+         
+@@ -922,9 +943,10 @@
+             ./configure --prefix=$BUILD NASM=/usr/local/bin/nasm \
+             --disable-dependency-tracking
+         make
+-        if [ $? != 0 ]; then
++        Err=$?
++        if [ $Err != 0 ]; then
+             echo "make failed"
+-            exit $?
++            exit $Err
+         fi
+         make install
+         cp -fv .libs/libjpeg.a ../libjpeg-i386.a
+@@ -942,9 +964,10 @@
+             ./configure --prefix=$BUILD \
+             --disable-dependency-tracking
+         make
+-        if [ $? != 0 ]; then
++        Err=$?
++        if [ $Err != 0 ]; then
+             echo "make failed"
+-            exit $?
++            exit $Err
+         fi
+         cp -fv libjpeg.a ../libjpeg-ppc.a
+         cd ..
+@@ -967,9 +990,10 @@
+         CFLAGS="$FLAGS $OSX_ARCH $OSX_FLAGS" CXXFLAGS="$FLAGS $OSX_ARCH $OSX_FLAGS" LDFLAGS="$FLAGS $OSX_ARCH $OSX_FLAGS" \
+             ./configure --prefix=$BUILD --disable-dependency-tracking
+         make
+-        if [ $? != 0 ]; then
++        Err=$?
++        if [ $Err != 0 ]; then
+             echo "make failed"
+-            exit $?
++            exit $Err
+         fi
+         
+         make install
+@@ -988,9 +1012,10 @@
+             ./configure --prefix=$BUILD \
+             --disable-dependency-tracking
+         make
+-        if [ $? != 0 ]; then
++        Err=$?
++        if [ $Err != 0 ]; then
+             echo "make failed"
+-            exit $?
++            exit $Err
+         fi
+         make install
+         cd ..
+@@ -1018,9 +1043,10 @@
+         ./configure --prefix=$BUILD \
+         --disable-dependency-tracking
+     make && make check
+-    if [ $? != 0 ]; then
++    Err=$?
++    if [ $Err != 0 ]; then
+         echo "make failed"
+-        exit $?
++        exit $Err
+     fi
+     make install
+     cd ..
+@@ -1041,11 +1067,13 @@
+         ./configure --prefix=$BUILD \
+         --disable-dependency-tracking
+     make
+-    if [ $? != 0 ]; then
++    Err=$?
++    if [ $Err != 0 ]; then
+         echo "make failed"
+-        exit $?
++        exit $Err
+     fi
+     make install
++    ln -s libgif.a "$BUILD/lib/libungif.a"
+     cd ..
+     
+     rm -rf giflib-4.1.6
+@@ -1115,9 +1143,10 @@
+                 ./configure $FFOPTS --arch=x86_64
+         
+             make
+-            if [ $? != 0 ]; then
++            Err=$?
++            if [ $Err != 0 ]; then
+                 echo "make failed"
+-                exit $?
++                exit $Err
+             fi
+         
+             cp -fv libavcodec/libavcodec.a libavcodec-x86_64.a
+@@ -1134,9 +1163,10 @@
+             ./configure $FFOPTS --arch=x86_32
+         
+         make
+-        if [ $? != 0 ]; then
++        Err=$?
++        if [ $Err != 0 ]; then
+             echo "make failed"
+-            exit $?
++            exit $Err
+         fi
+         
+         cp -fv libavcodec/libavcodec.a libavcodec-i386.a
+@@ -1153,9 +1183,10 @@
+                 ./configure $FFOPTS --arch=ppc --disable-altivec
+         
+             make
+-            if [ $? != 0 ]; then
++            Err=$?
++            if [ $Err != 0 ]; then
+                 echo "make failed"
+-                exit $?
++                exit $Err
+             fi
+         
+             cp -fv libavcodec/libavcodec.a libavcodec-ppc.a
+@@ -1192,9 +1223,10 @@
+             ./configure $FFOPTS
+         
+         $MAKE
+-        if [ $? != 0 ]; then
++        Err=$?
++        if [ $Err != 0 ]; then
+             echo "make failed"
+-            exit $?
++            exit $Err
+         fi
+         $MAKE install
+         cd ..
+@@ -1230,9 +1262,10 @@
+         --with-cryptography=no -disable-hash --disable-queue --disable-replication --disable-statistics --disable-verify \
+         --disable-dependency-tracking --disable-shared
+     make
+-    if [ $? != 0 ]; then
++    Err=$?
++    if [ $Err != 0 ]; then
+         echo "make failed"
+-        exit $?
++        exit $Err
+     fi
+     make install
+     cd ../..

@@ -1,0 +1,37 @@
+Source: logitechmediaserver
+Section: sound
+Priority: optional
+Maintainer: Radu C <radu.cx+lms@gmail.com>
+Build-Depends: debhelper (>= 8.0.0), quilt, rsync, nasm [i386 amd64]
+Standards-Version: 3.9.4
+Homepage: <insert the upstream URL, if relevant>
+#Vcs-Git: git://git.debian.org/collab-maint/logitechmediaserver.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/logitechmediaserver.git;a=summary
+
+Package: logitechmediaserver
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ logitechmediaserver-cpan-bundle,
+ logitechmediaserver-html,
+Recommends:
+ logitechmediaserver-code2000-font,
+ logitechmediaserver-firmware,
+Description: Streaming Audio Server
+ Logitech Media Server is a cross-platform streaming media server that supports a wide range
+ of formats, including AAC, AIFF, FLAC, Ogg Vorbis, MP3, WAV, and WMA.
+
+Package: logitechmediaserver-firmware
+Architecture: all
+Description: Logitech Media Server - firmware for Squeezeboxes
+
+Package: logitechmediaserver-html
+Architecture: all
+Description: Logitech Media Server - web pages
+
+Package: logitechmediaserver-code2000-font
+Architecture: all
+Description: Logitech Media Server - CODE2000 font
+
+Package: logitechmediaserver-cpan-bundle
+Architecture: any
+Description: Logitech Media Server - CPAN modules not provided by Ubuntu

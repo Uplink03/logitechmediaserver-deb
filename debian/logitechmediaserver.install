@@ -1,0 +1,13 @@
+etc
+usr/sbin
+usr/share/doc
+usr/share/perl5/Slim
+usr/share/squeezeboxserver/Bin
+usr/share/squeezeboxserver/SQL
+var/lib/squeezeboxserver
+
+usr/share/squeezeboxserver/icu* usr/share/squeezeboxserver
+usr/share/squeezeboxserver/*.txt usr/share/squeezeboxserver
+usr/share/squeezeboxserver/Graphics/*.ttf usr/share/squeezeboxserver/Graphics
+usr/share/squeezeboxserver/Graphics/*.bmp usr/share/squeezeboxserver/Graphics
+usr/share/squeezeboxserver/Graphics/*.bin usr/share/squeezeboxserver/Graphics

@@ -1,0 +1,5 @@
+usr/share/squeezeboxserver/CPAN
+usr/share/squeezeboxserver/lib
+#usr/share/man/*/*.3pm
+#usr/lib/perl5
+#usr/share/perl5/Tie
