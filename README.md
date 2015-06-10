@@ -8,9 +8,12 @@ I attempted to achieve that, but it's like Perl developers haven't heard of "API
 How to build
 ============
 
+	git clone --recursive https://github.com/Uplink03/logitechmediaserver-deb.git
+	cd logitechmediaserver-deb
+	
 	dpkg-buildpackage -rfakeroot -b -us -uc
 
-Normally you'll just need to install the packages referenced in build-depends. If you need extras, that's a bug in build-depends.
+Normally you'll just need to install the packages referenced in build-depends. If you need extras, that's a bug in build-depends. `dpkg-buildpackage` will tell you what packages you need to install to satisfy the build-depends.
 
 Packages
 ========
