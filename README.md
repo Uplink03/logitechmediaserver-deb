@@ -18,7 +18,7 @@ Normally you'll just need to install the packages referenced in build-depends. I
 Packages
 ========
 
-Unlike the Logitech-provided software, you will get four packages:
+Unlike the Logitech-provided software, you will get several packages instead of just one:
 - logitechmediaserver : the main software
 - logitechmediaserver-html : the web pages
 - logitechmediaserver-cpan-bundle : the CPAN modules, including the architecture-dependent bits
