@@ -9,6 +9,7 @@ platform_source = source/platforms
 vendor_source = source/vendor
 
 PerlArch = $(shell perl -e 'use Config; print "$$Config{archname}\n";')
+PerlVersion = $(shell perl -e 'print substr($$^V, 1, 4)' )
 
 .PHONY: build
 build:
@@ -91,8 +92,8 @@ install:
 	# Copy the revision file
 	cp revision.txt $(DESTDIR)/${share}
 	
-	install -d -m0755 $(DESTDIR)/${share}/CPAN/arch/5.18
-	cp -r ${vendor_source}/CPAN/build/5.18/lib/perl5/${PerlArch}/ $(DESTDIR)/${share}/CPAN/arch/5.18/
+	install -d -m0755 $(DESTDIR)/${share}/CPAN/arch/${PerlVersion}
+	cp -r ${vendor_source}/CPAN/build/${PerlVersion}/lib/perl5/${PerlArch}/ $(DESTDIR)/${share}/CPAN/arch/${PerlVersion}/
 	#mv $(tar zxvf faad2/faad2-build-armv7l-.tgz --wildcards *bin/faad) /usr/share/squeezeboxserver/Bin/arm-linux/
 	#mv $(tar zxvf flac/flac-build-armv7l-.tgz --wildcards *bin/flac) /usr/share/squeezeboxserver/Bin/arm-linux/
 	#mv $(tar zxvf sox/sox-build-armv7l-.tgz --wildcards *bin/sox) /usr/share/squeezeboxserver/Bin/arm-linux/
