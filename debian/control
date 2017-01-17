@@ -2,7 +2,7 @@ Source: logitechmediaserver
 Section: sound
 Priority: optional
 Maintainer: Radu C <radu.cx+lms@gmail.com>
-Build-Depends: debhelper (>= 8.0.0), quilt, rsync, nasm [i386 amd64]
+Build-Depends: debhelper (>= 8.0.0), quilt, rsync, nasm [i386 amd64], libz-dev
 Standards-Version: 3.9.4
 Homepage: <insert the upstream URL, if relevant>
 #Vcs-Git: git://git.debian.org/collab-maint/logitechmediaserver.git
